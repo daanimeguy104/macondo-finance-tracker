@@ -13,22 +13,28 @@ public class TitlePanel extends RoundedPanel {
         this.tl = tl;
         this.df = df;
         
-        super(12, new Color(248, 250, 252));
+        super(25, new Color(248, 250, 252));
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setPreferredSize(new Dimension(780, 50));
         
-        title = new JLabel("Macondo Financial Ledger");
+        title = new JLabel("Macondo Financial Tracker");
         title.setForeground(new Color(30, 41, 59));
         title.setBackground(getBackground());
         title.setFont(new Font("Sans Serif", Font.BOLD, 24));
         
-        runningAmount = new JLabel("Net Balance: $" + df.format(tl.getRunningBalance()));
+        runningAmount = new JLabel();
         runningAmount.setForeground(new Color(30, 41, 59));
         title.setBackground(getBackground());
         runningAmount.setFont(new Font("Sans Serif", Font.BOLD, 20));
         
         add(title, BorderLayout.WEST);
         add(runningAmount, BorderLayout.EAST);
+        
+        updateBalance();
+    }
+    
+    public void updateBalance() {
+        runningAmount.setText("Net Balance: $" + df.format(tl.getRunningBalance()));
     }
 }

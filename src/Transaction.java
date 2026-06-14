@@ -2,6 +2,7 @@ public class Transaction {
     
     private String name;
     private double amount;
+    private String date;
     private String category;
     private boolean isExpense;
     
@@ -13,6 +14,7 @@ public class Transaction {
         this.name = name;
         this.amount = amount;
         this.category = category;
+        this.date = date;
         
         if(amount < 0) {
             isExpense = true;
@@ -33,7 +35,15 @@ public class Transaction {
         return category;
     }
     
+    public String getDate() {
+        return date;
+    }
+    
     public boolean isExpense() {
         return isExpense;
+    }
+    
+    public String toString() {
+        return name + " " + amount + " " + date + " " + category;
     }
 }

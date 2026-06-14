@@ -1,22 +1,37 @@
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class InputPanel extends RoundedPanel {
     
     private TransactionList tl;
     private DecimalFormat df;
-    private JTextField description;
-    private JTextField amount;
+    private DataPanel dp;
+    private TitlePanel tp;
+    
     private JTextField searchBar;
-    private JComboBox<String> categories;
-    private JCheckBox isExpense;
+    private JTextField descriptionTF;
+    private JTextField amountTF;
+    private JComboBox<String> categoriesCB;
+    private JCheckBox isExpenseCB;
     private JButton createTransaction;
     
-    public InputPanel(TransactionList tl, DecimalFormat df) {
-        super(12, new Color(248, 250, 252));
+    public InputPanel(TransactionList tl, DecimalFormat df, DataPanel dp, TitlePanel tp) {
+        super(25, new Color(248, 250, 252));
+        this.tl = tl;
+        this.df = df;
+        this.dp = dp;
+        this.tp = tp;
+        
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setPreferredSize(new Dimension(250, 510));
         
         JLabel title = new JLabel("Input Console", JLabel.LEFT);
@@ -39,6 +54,7 @@ public class InputPanel extends RoundedPanel {
         searchBar = new JTextField(10);
         searchBar.setFont(new Font("Sans Serif", Font.PLAIN, 16));
         searchBar.setAlignmentX(Component.LEFT_ALIGNMENT);
+        searchBar.getDocument().addDocumentListener(new SearchBarListener());
         
         searchBarHolder.add(search);
         searchBarHolder.add(searchBar);
@@ -65,14 +81,14 @@ public class InputPanel extends RoundedPanel {
         descriptionLabel.setBackground(getBackground());
         descriptionLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         
-        description = new JTextField(12);
-        description.setFont(new Font("Sans Serif", Font.BOLD, 11));
-        description.setMaximumSize(new Dimension(220, 30));
-        description.setAlignmentX(Component.LEFT_ALIGNMENT);
+        descriptionTF = new JTextField(12);
+        descriptionTF.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+        descriptionTF.setMaximumSize(new Dimension(220, 30));
+        descriptionTF.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         descriptionPanel.add(descriptionLabel);
         descriptionPanel.add(Box.createVerticalStrut(5));
-        descriptionPanel.add(description);
+        descriptionPanel.add(descriptionTF);
         
         JPanel amountPanel = new JPanel();
         amountPanel.setLayout(new BoxLayout(amountPanel, BoxLayout.Y_AXIS));
@@ -85,14 +101,14 @@ public class InputPanel extends RoundedPanel {
         amountLabel.setBackground(getBackground());
         amountLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         
-        amount = new JTextField(12);
-        amount.setFont(new Font("Sans Serif", Font.BOLD, 11));
-        amount.setMaximumSize(new Dimension(220, 30));
-        amount.setAlignmentX(Component.LEFT_ALIGNMENT);
+        amountTF = new JTextField(12);
+        amountTF.setFont(new Font("Sans Serif", Font.PLAIN, 11));
+        amountTF.setMaximumSize(new Dimension(220, 30));
+        amountTF.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         amountPanel.add(amountLabel);
         amountPanel.add(Box.createVerticalStrut(5));
-        amountPanel.add(amount);
+        amountPanel.add(amountTF);
         
         JPanel categoryPanel = new JPanel();
         categoryPanel.setLayout(new BoxLayout(categoryPanel, BoxLayout.Y_AXIS));
@@ -105,16 +121,16 @@ public class InputPanel extends RoundedPanel {
         categoryLabel.setBackground(getBackground());
         categoryLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         
-        String[] cleanCategories = {"Housing & Bills", "Food & Dining", "Transportation", "Entertainment", "Shopping", "Other / Misc"};
-        categories = new  JComboBox<>(cleanCategories);
-        categories.setBackground(getBackground());
-        categories.setFont(new Font("Sans Serif", Font.BOLD, 12));
-        categories.setMaximumSize(new Dimension(220, 30));
-        categories.setAlignmentX(Component.LEFT_ALIGNMENT);
+        String[] categories = {"Housing & Bills", "Food & Dining", "Transportation", "Entertainment", "Shopping", "Salary", "Other / Misc"};
+        categoriesCB = new JComboBox<>(categories);
+        categoriesCB.setBackground(getBackground());
+        categoriesCB.setFont(new Font("Sans Serif", Font.PLAIN, 12));
+        categoriesCB.setMaximumSize(new Dimension(220, 30));
+        categoriesCB.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         categoryPanel.add(categoryLabel);
         categoryPanel.add(Box.createVerticalStrut(5));
-        categoryPanel.add(categories);
+        categoryPanel.add(categoriesCB);
         
         JPanel isExpensePanel = new JPanel(new  FlowLayout(FlowLayout.LEFT, 0, 0));
         isExpensePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -126,11 +142,11 @@ public class InputPanel extends RoundedPanel {
         isExpenseLabel.setBackground(getBackground());
         isExpenseLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         
-        isExpense = new JCheckBox("");
-        isExpense.setFont(new Font("Sans Serif", Font.BOLD, 12));
-        isExpense.setAlignmentX(Component.LEFT_ALIGNMENT);
+        isExpenseCB = new JCheckBox("");
+        isExpenseCB.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        isExpenseCB.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        isExpensePanel.add(isExpense);
+        isExpensePanel.add(isExpenseCB);
         isExpensePanel.add(isExpenseLabel);
         
         transactionInfo.add(descriptionPanel);
@@ -160,6 +176,7 @@ public class InputPanel extends RoundedPanel {
         createTransaction.setBackground(new Color(37, 99, 235));
         createTransaction.setForeground(Color.WHITE);
         createTransaction.setFont(new Font("Sans Serif", Font.BOLD, 14));
+        createTransaction.addActionListener(new AddTransaction());
         
         add(title);
         add(Box.createVerticalStrut(16));
@@ -171,5 +188,82 @@ public class InputPanel extends RoundedPanel {
         add(Box.createVerticalStrut(24));
         add(createTransaction);
         add(Box.createVerticalGlue());
+    }
+    
+    class AddTransaction implements ActionListener {
+        
+        public void actionPerformed(ActionEvent evt) {
+            String description = descriptionTF.getText();
+            if(description.trim().equals("")) {
+                JOptionPane.showMessageDialog(InputPanel.this, "Please" +
+                    " enter a description.", "Missing Input", JOptionPane.PLAIN_MESSAGE, null);
+                return;
+            }
+            double amount = 0.0;
+            
+            try {
+                amount = Double.parseDouble(amountTF.getText());
+            } catch(NumberFormatException e) {
+                JOptionPane.showMessageDialog(InputPanel.this, "Please" +
+                    " enter a valid non-zero number", "Incorrect Input",
+                    JOptionPane.PLAIN_MESSAGE);
+                return;
+            }
+            
+            if(amount == 0) {
+                JOptionPane.showMessageDialog(InputPanel.this, "Please" +
+                    " enter a valid non-zero number", "Incorrect Input",
+                    JOptionPane.PLAIN_MESSAGE);
+                return;
+            }
+            
+            if(isExpenseCB.isSelected()) {
+                amount = amount * -1;
+            }
+            
+            String category = categoriesCB.getSelectedItem().toString();
+            String date = LocalDate.now().format(DateTimeFormatter.ofPattern("MMM " +
+                "dd, yyyy"));
+            
+            tl.addTransaction(description, amount, date, category);
+            
+            DefaultTableModel transactionsModel = dp.getTransactionsTableModel();
+            String[] tableRow = new String[transactionsModel.getColumnCount()];
+            
+            if(amount > 0) {
+                tableRow[0] = "▲";
+            } else {
+                tableRow[0] = "▼";
+            }
+            
+            tableRow[1] = date;
+            tableRow[2] = description;
+            tableRow[3] = category;
+            tableRow[4] = df.format(Math.abs(amount));
+            
+            transactionsModel.addRow(tableRow);
+            
+            tp.updateBalance();
+            dp.updateRatios();
+        }
+    }
+    
+    class SearchBarListener implements DocumentListener {
+        public void insertUpdate(DocumentEvent e) {
+            search();
+        }
+        
+        public void removeUpdate(DocumentEvent e) {
+            search();
+        }
+        
+        public void changedUpdate(DocumentEvent e) {
+            search();
+        }
+        
+        public void search() {
+            String query = searchBar.getText();
+            dp.filterTable(query);
+        }
     }
 }

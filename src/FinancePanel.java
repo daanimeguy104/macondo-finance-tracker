@@ -5,7 +5,7 @@ import java.text.DecimalFormat;
 public class FinancePanel extends JPanel {
     
     public FinancePanel() {
-        DecimalFormat df = new DecimalFormat("###,###.###");
+        DecimalFormat df = new DecimalFormat("###,##0.00");
         TransactionList tl = new TransactionList();
         
         setLayout(new BorderLayout(10, 10));
@@ -20,8 +20,8 @@ public class FinancePanel extends JPanel {
         bottomWrapper.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
         
         TitlePanel titlePanel = new TitlePanel(tl, df);
-        InputPanel inputPanel = new InputPanel(tl, df);
         DataPanel dataPanel = new DataPanel(tl, df);
+        InputPanel inputPanel = new InputPanel(tl, df, dataPanel, titlePanel);
         
         topWrapper.add(titlePanel, BorderLayout.NORTH);
         

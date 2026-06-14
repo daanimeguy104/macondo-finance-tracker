@@ -19,6 +19,22 @@ public class TransactionList {
         transactionCount++;
     }
     
+    public double getIncome() {
+        double income = 0.0;
+        
+        for(int i = 0; i < transactions.size(); i++) {
+            if(transactions.get(i).isExpense()) {
+                continue;
+            }
+            income += transactions.get(i).getAmount();
+        }
+        return income;
+    }
+    
+    public double getExpense() {
+        return getIncome() - runningBalance;
+    }
+    
     public double getRunningBalance() {
         return runningBalance;
     }
@@ -29,5 +45,9 @@ public class TransactionList {
     
     public ArrayList<Transaction> getTransactions() {
         return transactions;
+    }
+    
+    public String toString() {
+        return transactions.toString();
     }
 }
