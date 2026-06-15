@@ -1,0 +1,14 @@
+[
+  {
+    "name": "Bi-Weekly Paycheck",
+    "amount": 2500.0,
+    "date": "Jun 12, 2026",
+    "category": "Salary"
+  },
+  {
+    "name": "Target Grocery Run",
+    "amount": -145.2,
+    "date": "Jun 14, 2026",
+    "category": "Food"
+  }
+]
