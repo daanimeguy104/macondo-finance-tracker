@@ -4,9 +4,8 @@ import java.text.DecimalFormat;
 
 public class FinancePanel extends JPanel {
     
-    public FinancePanel() {
+    public FinancePanel(TransactionList tl) {
         DecimalFormat df = new DecimalFormat("###,##0.00");
-        TransactionList tl = new TransactionList();
         
         setLayout(new BorderLayout(10, 10));
         setBackground(new Color(15, 23, 42));

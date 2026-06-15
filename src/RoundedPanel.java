@@ -5,14 +5,10 @@ public class RoundedPanel extends JPanel {
     
     private int cornerRadius;
     
-    public RoundedPanel() {
-        cornerRadius = 10;
-        setBackground(new Color(238, 238, 238));
-    }
-    
     public RoundedPanel(int cornerRadius, Color bgColor) {
         this.cornerRadius = cornerRadius;
         setBackground(bgColor);
+        setOpaque(false);
     }
     
     public void paintComponent(Graphics g) {

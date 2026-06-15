@@ -1,7 +1,6 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -100,7 +99,7 @@ public class DataPanel extends RoundedPanel {
         centerWorkspace.setLayout(new BoxLayout(centerWorkspace, BoxLayout.Y_AXIS));
         centerWorkspace.setOpaque(false);
         
-        JPanel tableContainer = new JPanel(new BorderLayout(0, 10));
+        JPanel tableContainer = new JPanel(new BorderLayout(0, 20));
         tableContainer.setOpaque(false);
         tableContainer.setPreferredSize(new Dimension(490, 240));
         
@@ -116,6 +115,24 @@ public class DataPanel extends RoundedPanel {
                 return false;
             }
         };
+        
+        for(int i = 0; i < tl.getTransactionCount(); i++) {
+            String[] row = new String[transactionsTableModel.getColumnCount()];
+            Transaction currTrans = tl.getTransaction(i);
+            
+            if(currTrans.getAmount() > 0) {
+                row[0] = "▲";
+            } else {
+                row[0] = "▼";
+            }
+            
+            row[1] = currTrans.getDate();
+            row[2] = currTrans.getName();
+            row[3] = currTrans.getCategory();
+            row[4] = "$" + df.format(Math.abs(currTrans.getAmount()));
+            
+            transactionsTableModel.addRow(row);
+        }
         
         transactionsTable = new JTable(transactionsTableModel);
         transactionsTable.setRowHeight(34);
@@ -215,14 +232,18 @@ public class DataPanel extends RoundedPanel {
         add(summaryRow, BorderLayout.NORTH);
         add(centerWorkspace, BorderLayout.CENTER);
         
-        updateRatios();
+        updateDisplays();
     }
     
     public DefaultTableModel getTransactionsTableModel() {
         return transactionsTableModel;
     }
     
-    public void updateRatios() {
+    public JTable getTable() {
+        return transactionsTable;
+    }
+    
+    public void updateDisplays() {
         incomeTotal.setText("$" + df.format(tl.getIncome()));
         expenseTotal.setText("$" + df.format(tl.getExpense()));
         transactionAmt.setText(tl.getTransactionCount() + "");
@@ -242,6 +263,7 @@ public class DataPanel extends RoundedPanel {
             expenseToIncomeRate * 100));
         netMargin.setText(String.format("Net Margin: %.2f%%", netMarginRate * 100));
     }
+    
     
     public void filterTable(String query) {
         if(query.trim().length() == 0) {

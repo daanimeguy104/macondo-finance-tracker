@@ -22,6 +22,7 @@ public class InputPanel extends RoundedPanel {
     private JComboBox<String> categoriesCB;
     private JCheckBox isExpenseCB;
     private JButton createTransaction;
+    private JButton removeSelected;
     
     public InputPanel(TransactionList tl, DecimalFormat df, DataPanel dp, TitlePanel tp) {
         super(25, new Color(248, 250, 252));
@@ -178,6 +179,27 @@ public class InputPanel extends RoundedPanel {
         createTransaction.setFont(new Font("Sans Serif", Font.BOLD, 14));
         createTransaction.addActionListener(new AddTransaction());
         
+        removeSelected = new JButton("Remove Selected Rows") {
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(getBackground());
+                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
+                g2.dispose();
+                
+                super.paintComponent(g);
+            }
+        };
+        
+        removeSelected.setOpaque(false);
+        removeSelected.setContentAreaFilled(false);
+        removeSelected.setBorderPainted(false);
+        removeSelected.setFocusPainted(false);
+        removeSelected.setBackground(new Color(220, 53, 69));
+        removeSelected.setForeground(Color.WHITE);
+        removeSelected.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        removeSelected.addActionListener(new RemoveSelectedTransactions());
+        
         add(title);
         add(Box.createVerticalStrut(16));
         add(searchBarHolder);
@@ -187,6 +209,8 @@ public class InputPanel extends RoundedPanel {
         add(transactionInfo);
         add(Box.createVerticalStrut(24));
         add(createTransaction);
+        add(Box.createVerticalStrut(32));
+        add(removeSelected);
         add(Box.createVerticalGlue());
     }
     
@@ -244,7 +268,7 @@ public class InputPanel extends RoundedPanel {
             transactionsModel.addRow(tableRow);
             
             tp.updateBalance();
-            dp.updateRatios();
+            dp.updateDisplays();
         }
     }
     
@@ -264,6 +288,31 @@ public class InputPanel extends RoundedPanel {
         public void search() {
             String query = searchBar.getText();
             dp.filterTable(query);
+        }
+    }
+    
+    class RemoveSelectedTransactions implements ActionListener {
+        
+        public void actionPerformed(ActionEvent evt) {
+            JTable transactions = dp.getTable();
+            DefaultTableModel transactionsModel = dp.getTransactionsTableModel();
+            
+            int[] selectedRows = transactions.getSelectedRows();
+            
+            if(selectedRows.length == 0) {
+                JOptionPane.showMessageDialog(InputPanel.this, "Please select" +
+                    "one or more rows to delete.", "Missing Input", JOptionPane.PLAIN_MESSAGE, null);
+                return;
+            }
+            
+            for(int i = selectedRows.length - 1; i >= 0; i--) {
+                int modelRow = transactions.convertRowIndexToModel(selectedRows[i]);
+                tl.removeTransaction(modelRow);
+                transactionsModel.removeRow(modelRow);
+            }
+            
+            dp.updateDisplays();
+            tp.updateBalance();
         }
     }
 }

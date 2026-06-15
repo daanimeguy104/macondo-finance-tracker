@@ -18,7 +18,7 @@ public class TitlePanel extends RoundedPanel {
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setPreferredSize(new Dimension(780, 50));
         
-        title = new JLabel("Macondo Financial Tracker");
+        title = new JLabel("Macondo Finance Tracker");
         title.setForeground(new Color(30, 41, 59));
         title.setBackground(getBackground());
         title.setFont(new Font("Sans Serif", Font.BOLD, 24));
@@ -35,6 +35,10 @@ public class TitlePanel extends RoundedPanel {
     }
     
     public void updateBalance() {
-        runningAmount.setText("Net Balance: $" + df.format(tl.getRunningBalance()));
+        if(tl.getRunningBalance() >= 0) {
+            runningAmount.setText("Net Balance: $" + df.format(tl.getRunningBalance()));
+        } else {
+            runningAmount.setText("Net Balance: -$" + df.format(-1 * tl.getRunningBalance()));
+        }
     }
 }

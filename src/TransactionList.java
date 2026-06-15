@@ -19,6 +19,16 @@ public class TransactionList {
         transactionCount++;
     }
     
+    public void removeTransaction(int index) {
+        if(index >= 0 && index < transactions.size()) {
+            Transaction transaction = transactions.remove(index);
+            runningBalance -= transaction.getAmount();
+            transactionCount--;
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+    
     public double getIncome() {
         double income = 0.0;
         
@@ -33,6 +43,10 @@ public class TransactionList {
     
     public double getExpense() {
         return getIncome() - runningBalance;
+    }
+    
+    public Transaction getTransaction(int index) {
+        return transactions.get(index);
     }
     
     public double getRunningBalance() {
