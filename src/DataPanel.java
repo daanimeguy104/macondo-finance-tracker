@@ -4,6 +4,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.text.DecimalFormat;
+import java.util.Arrays;
 
 public class DataPanel extends RoundedPanel {
     
@@ -27,68 +28,73 @@ public class DataPanel extends RoundedPanel {
         
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setPreferredSize(new Dimension(520, 510));
-        setLayout(new BorderLayout(0, 20));
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
         JPanel summaryRow = new JPanel(new GridLayout(1, 3));
-        summaryRow.setLayout(new GridLayout(1, 0, 16, 0));
+        summaryRow.setLayout(new GridLayout(1, 0, 15, 0));
         summaryRow.setOpaque(false);
         summaryRow.setPreferredSize(new Dimension(520, 80));
+        summaryRow.setMaximumSize(new Dimension(520, 80));
+        summaryRow.setMinimumSize(new Dimension(520, 80));
         
         JPanel incomeCard = new RoundedPanel(15, new Color(40, 167, 69));
         incomeCard.setLayout(new BoxLayout(incomeCard, BoxLayout.Y_AXIS));
+        incomeCard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 5));
         
         JLabel totalIncomeLabel = new JLabel("Total Income");
         totalIncomeLabel.setForeground(Color.WHITE);
         totalIncomeLabel.setBackground(incomeCard.getBackground());
-        totalIncomeLabel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         totalIncomeLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
         totalIncomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         incomeTotal = new JLabel();
         incomeTotal.setForeground(Color.WHITE);
         incomeTotal.setBackground(incomeCard.getBackground());
-        incomeTotal.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        incomeTotal.setFont(new Font("Sans Serif", Font.BOLD, 20));
         incomeTotal.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         incomeCard.add(totalIncomeLabel);
+        incomeCard.add(Box.createVerticalStrut(10));
         incomeCard.add(incomeTotal);
         
         JPanel expenseCard = new RoundedPanel(15, new Color(220, 53, 69));
         expenseCard.setLayout(new BoxLayout(expenseCard, BoxLayout.Y_AXIS));
+        expenseCard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         JLabel totalExpenseLabel = new JLabel("Total Expenses");
         totalExpenseLabel.setForeground(Color.WHITE);
         totalExpenseLabel.setBackground(expenseCard.getBackground());
-        totalExpenseLabel.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         totalExpenseLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
         totalExpenseLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         expenseTotal = new JLabel();
         expenseTotal.setForeground(Color.WHITE);
         expenseTotal.setBackground(expenseCard.getBackground());
-        expenseTotal.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        expenseTotal.setFont(new Font("Sans Serif", Font.BOLD, 20));
         expenseTotal.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         expenseCard.add(totalExpenseLabel);
+        expenseCard.add(Box.createVerticalStrut(10));
         expenseCard.add(expenseTotal);
         
         JPanel transactionCard = new RoundedPanel(15, new Color(108, 117, 125));
         transactionCard.setLayout(new BoxLayout(transactionCard, BoxLayout.Y_AXIS));
+        transactionCard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         
         JLabel transactionLabel = new JLabel("Transactions");
         transactionLabel.setForeground(Color.WHITE);
         transactionLabel.setBackground(transactionCard.getBackground());
-        transactionLabel.setBorder(BorderFactory.createEmptyBorder(8, 8 , 8, 8));
         transactionLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
         transactionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         transactionAmt = new JLabel();
         transactionAmt.setForeground(Color.WHITE);
         transactionAmt.setBackground(transactionCard.getBackground());
-        transactionAmt.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        transactionAmt.setFont(new Font("Sans Serif", Font.BOLD, 20));
         transactionAmt.setAlignmentX(Component.CENTER_ALIGNMENT);
         
         transactionCard.add(transactionLabel);
+        transactionCard.add(Box.createVerticalStrut(10));
         transactionCard.add(transactionAmt);
         
         summaryRow.add(incomeCard);
@@ -101,7 +107,9 @@ public class DataPanel extends RoundedPanel {
         
         JPanel tableContainer = new JPanel(new BorderLayout(0, 20));
         tableContainer.setOpaque(false);
-        tableContainer.setPreferredSize(new Dimension(490, 240));
+        tableContainer.setPreferredSize(new Dimension(490, 200));
+        tableContainer.setMaximumSize(new Dimension(490, 200));
+        tableContainer.setMinimumSize(new Dimension(490, 200));
         
         JLabel tableTitle = new JLabel("Transaction History", JLabel.LEFT);
         tableTitle.setForeground(new Color(30, 41, 59));
@@ -155,7 +163,9 @@ public class DataPanel extends RoundedPanel {
         
         transactionsTable.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
             
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+                
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 setHorizontalAlignment(SwingConstants.CENTER);
                 
@@ -188,6 +198,9 @@ public class DataPanel extends RoundedPanel {
         tableContainer.add(scroller, BorderLayout.CENTER);
         
         JPanel bottomSplitInsights = new JPanel(new GridLayout(1, 2));
+        bottomSplitInsights.setPreferredSize(new Dimension(490, 150));
+        bottomSplitInsights.setMaximumSize(new Dimension(490, 150));
+        bottomSplitInsights.setMinimumSize(new Dimension(490, 150));
         bottomSplitInsights.setOpaque(false);
         
         JPanel ratiosPanel = new JPanel();
@@ -222,15 +235,28 @@ public class DataPanel extends RoundedPanel {
         ratiosPanel.add(Box.createVerticalStrut(5));
         ratiosPanel.add(netMargin);
         
+        JPanel chartWrapper = new JPanel(new BorderLayout());
+        chartWrapper.setOpaque(false);
+        
+        JLabel expensesByCategory = new JLabel("Expenses By Category", JLabel.LEFT);
+        expensesByCategory.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        expensesByCategory.setForeground(new Color(30, 41, 59));
+        expensesByCategory.setBackground(getBackground());
+        
+        JPanel chartHolder = new JPanel(new BorderLayout());
+        chartHolder.setOpaque(false);
+        
+        chartWrapper.add(expensesByCategory, BorderLayout.NORTH);
+        chartWrapper.add(chartHolder, BorderLayout.CENTER);
+        
         bottomSplitInsights.add(ratiosPanel);
-        bottomSplitInsights.add(Box.createVerticalGlue());
+        bottomSplitInsights.add(chartWrapper);
         
-        centerWorkspace.add(tableContainer, BorderLayout.NORTH);
-        centerWorkspace.add(Box.createVerticalStrut(20));
-        centerWorkspace.add(bottomSplitInsights, BorderLayout.SOUTH);
-        
-        add(summaryRow, BorderLayout.NORTH);
-        add(centerWorkspace, BorderLayout.CENTER);
+        add(summaryRow);
+        add(Box.createVerticalStrut(15));
+        add(tableContainer);
+        add(Box.createVerticalStrut(15));
+        add(bottomSplitInsights);
         
         updateDisplays();
     }
@@ -270,6 +296,37 @@ public class DataPanel extends RoundedPanel {
             sorter.setRowFilter(null);
         } else {
             sorter.setRowFilter(RowFilter.regexFilter("(?i)" + query, 2));
+        }
+    }
+    
+    class ExpensesPieChart extends JPanel {
+        
+        private String[] categories;
+        private double[] amounts;
+        
+        public ExpensesPieChart() {
+            setBackground(DataPanel.this.getBackground());
+            
+            categories = new String[]{"Housing & Bills", "Food & Dining", "Transportation",
+                "Entertainment", "Shopping", "Salary", "Other / Misc"};
+            Arrays.sort(categories);
+            
+            amounts = new double[categories.length];
+            
+            for(int i = 0; i < tl.getTransactionCount(); i++) {
+                Transaction currTrans = tl.getTransaction(i);
+                
+                String category = currTrans.getCategory();
+                int index = Arrays.binarySearch(categories, category);
+                amounts[index] += currTrans.getAmount();
+            }
+        }
+        
+        public void paintComponent(Graphics g) {
+            Graphics2D g2d = (Graphics2D)(g.create());
+            int pieChartSize = Math.min(getWidth(), getHeight());
+            
+            
         }
     }
 }

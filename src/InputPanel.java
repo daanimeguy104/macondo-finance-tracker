@@ -122,7 +122,8 @@ public class InputPanel extends RoundedPanel {
         categoryLabel.setBackground(getBackground());
         categoryLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         
-        String[] categories = {"Housing & Bills", "Food & Dining", "Transportation", "Entertainment", "Shopping", "Salary", "Other / Misc"};
+        String[] categories = {"Housing & Bills", "Food & Dining", "Transportation",
+            "Entertainment", "Shopping", "Salary", "Other / Misc"};
         categoriesCB = new JComboBox<>(categories);
         categoriesCB.setBackground(getBackground());
         categoriesCB.setFont(new Font("Sans Serif", Font.PLAIN, 12));
@@ -236,7 +237,7 @@ public class InputPanel extends RoundedPanel {
             
             if(amount == 0) {
                 JOptionPane.showMessageDialog(InputPanel.this, "Please" +
-                    " enter a valid non-zero number", "Incorrect Input",
+                    " enter a valid non-zero number for the amount", "Incorrect Input",
                     JOptionPane.PLAIN_MESSAGE);
                 return;
             }
@@ -301,7 +302,8 @@ public class InputPanel extends RoundedPanel {
             
             if(selectedRows.length == 0) {
                 JOptionPane.showMessageDialog(InputPanel.this, "Please select" +
-                    "one or more rows to delete.", "Missing Input", JOptionPane.PLAIN_MESSAGE, null);
+                    " one or more rows to delete.", "Missing Input",
+                    JOptionPane.PLAIN_MESSAGE, null);
                 return;
             }
             
