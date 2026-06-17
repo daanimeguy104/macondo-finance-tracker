@@ -3,12 +3,66 @@
         "name": "Bi-Weekly Paycheck",
         "amount": 2500.0,
         "date": "Jun 12, 2026",
-        "category": "Salary"
+        "category": "Income"
     },
     {
-        "name": "Target Grocery Run",
-        "amount": -145.2,
-        "date": "Jun 14, 2026",
-        "category": "Food"
+        "name": "Monthly Apartment Rent",
+        "amount": -1200.0,
+        "date": "Jun 01, 2026",
+        "category": "Housing & Bills"
+    },
+    {
+        "name": "Electric Bill",
+        "amount": -85.5,
+        "date": "Jun 03, 2026",
+        "category": "Housing & Bills"
+    },
+    {
+        "name": "Gas Station Refuel",
+        "amount": -45.0,
+        "date": "Jun 05, 2026",
+        "category": "Transportation"
+    },
+    {
+        "name": "Uber Ride",
+        "amount": -22.5,
+        "date": "Jun 06, 2026",
+        "category": "Transportation"
+    },
+    {
+        "name": "Movie Theater Tickets",
+        "amount": -35.0,
+        "date": "Jun 07, 2026",
+        "category": "Entertainment"
+    },
+    {
+        "name": "Streaming Service Subscription",
+        "amount": -14.99,
+        "date": "Jun 08, 2026",
+        "category": "Entertainment"
+    },
+    {
+        "name": "Clothing Store Mall Trip",
+        "amount": -120.0,
+        "date": "Jun 10, 2026",
+        "category": "Shopping"
+    },
+    {
+        "name": "Online Electronics Order",
+        "amount": -65.4,
+        "date": "Jun 11, 2026",
+        "category": "Shopping"
+    },
+    {
+        "name": "Whole Foods Market",
+        "amount": -92.35,
+        "date": "Jun 15, 2026",
+        "category": "Dining & Groceries"
+    },
+    {
+        "name": "Cash Withdrawal Fee",
+        "amount": -3.5,
+        "date": "Jun 16, 2026",
+        "category": "Other / Misc"
     }
 ]

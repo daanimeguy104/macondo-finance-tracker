@@ -16,17 +16,28 @@ public class Main {
     public static void main(String[] args) {
         Main main = new Main();
         main.run();
+        
+        Runtime.getRuntime().addShutdownHook(new Thread() {
+            public void run() {
+                try {
+                    main.writeJSON();
+                } catch(Exception e) {
+                    JOptionPane.showMessageDialog(null, "Error saving" +
+                        "data during shutdown: " + e.getMessage(), "Error",
+                        JOptionPane.PLAIN_MESSAGE);
+                }
+            }
+        });
     }
     
     public void run() {
         JFrame frame = new JFrame();
         frame.setSize(800, 600);
-        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.add(new FinancePanel(tl));
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
-        frame.addWindowListener(new SaveOnExit());
     }
     
     public void readJSON() {
@@ -79,41 +90,31 @@ public class Main {
         return Double.parseDouble(line.substring(colonIndex + 2, commaIndex));
     }
     
-    class SaveOnExit extends WindowAdapter {
-    
-        public void windowClosing(WindowEvent evt) {
-            PrintWriter out = null;
-            try {
-                out = new PrintWriter("transactions.json");
-            } catch(IOException e) {
-                System.err.println("transactions.json unable to be written to.");
-                System.exit(10);
-            }
-            
-            out.println("[");
-            for(int i = 0; i < tl.getTransactionCount(); i++) {
-                Transaction currTrans = tl.getTransaction(i);
-                
-                out.println("    {");
-                out.println("        \"name\": \"" + currTrans.getName() + "\",");
-                out.println("        \"amount\": " + currTrans.getAmount() + ",");
-                out.println("        \"date\": \"" + currTrans.getDate() + "\",");
-                out.println("        \"category\": \"" + currTrans.getCategory() + "\"");
-                
-                out.print("    }");
-                if(i != tl.getTransactionCount() - 1) {
-                    out.println(",");
-                }
-            }
-            out.println("\n]");
-            out.close();
-            
-            if(evt.getSource() instanceof JFrame) {
-                JFrame frame = (JFrame)(evt.getSource());
-                frame.dispose();
-            }
-            
-            System.exit(0);
+    public void writeJSON() {
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter("transactions.json");
+        } catch(IOException e) {
+            System.err.println("transactions.json unable to be written to.");
+            System.exit(10);
         }
+        
+        out.println("[");
+        for(int i = 0; i < tl.getTransactionCount(); i++) {
+            Transaction currTrans = tl.getTransaction(i);
+            
+            out.println("    {");
+            out.println("        \"name\": \"" + currTrans.getName() + "\",");
+            out.println("        \"amount\": " + currTrans.getAmount() + ",");
+            out.println("        \"date\": \"" + currTrans.getDate() + "\",");
+            out.println("        \"category\": \"" + currTrans.getCategory() + "\"");
+            
+            out.print("    }");
+            if(i != tl.getTransactionCount() - 1) {
+                out.println(",");
+            }
+        }
+        out.println("\n]");
+        out.close();
     }
 }

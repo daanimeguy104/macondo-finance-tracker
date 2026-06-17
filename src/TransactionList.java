@@ -41,7 +41,7 @@ public class TransactionList {
         return income;
     }
     
-    public double getExpense() {
+    public double getExpenses() {
         return getIncome() - runningBalance;
     }
     

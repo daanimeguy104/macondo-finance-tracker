@@ -122,8 +122,8 @@ public class InputPanel extends RoundedPanel {
         categoryLabel.setBackground(getBackground());
         categoryLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
         
-        String[] categories = {"Housing & Bills", "Food & Dining", "Transportation",
-            "Entertainment", "Shopping", "Salary", "Other / Misc"};
+        String[] categories = {"Entertainment", "Dining & Groceries", "Housing & " +
+            "Bills", "Shopping", "Transportation", "Other / Misc"};
         categoriesCB = new JComboBox<>(categories);
         categoriesCB.setBackground(getBackground());
         categoriesCB.setFont(new Font("Sans Serif", Font.PLAIN, 12));
@@ -147,6 +147,8 @@ public class InputPanel extends RoundedPanel {
         isExpenseCB = new JCheckBox("");
         isExpenseCB.setFont(new Font("Sans Serif", Font.BOLD, 12));
         isExpenseCB.setAlignmentX(Component.LEFT_ALIGNMENT);
+        isExpenseCB.setSelected(true);
+        isExpenseCB.addActionListener(new IfExpense());
         
         isExpensePanel.add(isExpenseCB);
         isExpensePanel.add(isExpenseLabel);
@@ -210,7 +212,7 @@ public class InputPanel extends RoundedPanel {
         add(transactionInfo);
         add(Box.createVerticalStrut(24));
         add(createTransaction);
-        add(Box.createVerticalStrut(32));
+        add(Box.createVerticalStrut(25));
         add(removeSelected);
         add(Box.createVerticalGlue());
     }
@@ -270,6 +272,11 @@ public class InputPanel extends RoundedPanel {
             
             tp.updateBalance();
             dp.updateDisplays();
+            
+            descriptionTF.setText("");
+            amountTF.setText("");
+            categoriesCB.setSelectedIndex(0);
+            isExpenseCB.setSelected(true);
         }
     }
     
@@ -289,6 +296,16 @@ public class InputPanel extends RoundedPanel {
         public void search() {
             String query = searchBar.getText();
             dp.filterTable(query);
+        }
+    }
+    
+    class IfExpense implements ActionListener {
+        
+        public void actionPerformed(ActionEvent evt) {
+            categoriesCB.setEnabled(isExpenseCB.isSelected());
+            
+            revalidate();
+            repaint();
         }
     }
     
