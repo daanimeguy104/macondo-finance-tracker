@@ -8,21 +8,21 @@ Macondo Finance Tracker is a lightweight desktop personal finance dashboard buil
 
 This project is configured as a standard IntelliJ IDEA module. All operational codebase elements reside inside the root source directory:
 
-MacondoFinanceTracker/
-│
-├── .idea/                  # IntelliJ project configuration metadata
-├── src/                    # Source folder containing Java classes
-│   ├── DataPanel.java      # Table views, analytics calculations, and custom pie chart canvas
-│   ├── FinancePanel.java   # Master layout wrapper organizing the global frame grids
-│   ├── InputPanel.java     # Text consoles, filter hooks, and action listeners
-│   ├── Main.java           # Main bootstrapper, storage scanner, and shutdown hooks
-│   ├── RoundedPanel.java   # Core graphics helper overriding UI painting geometry
-│   ├── TitlePanel.java     # Responsive header displaying the dynamic net balance banner
-│   ├── Transaction.java    # Read-only model representing single ledger entries
-│   └── TransactionList.java# Centralized storage array and calculation matrix engine
-│
-├── MacondoFinanceTracker.iml # IntelliJ module structure descriptor
-└── transactions.json       # Generated local JSON data ledger database file
+MacondoFinanceTracker/<br>
+│<br>
+├── .idea/                  # IntelliJ project configuration metadata<br>
+├── src/                    # Source folder containing Java classes<br>
+│   ├── DataPanel.java      # Table views, analytics calculations, and custom pie chart canvas<br>
+│   ├── FinancePanel.java   # Master layout wrapper organizing the global frame grids<br>
+│   ├── InputPanel.java     # Text consoles, filter hooks, and action listeners<br>
+│   ├── Main.java           # Main bootstrapper, storage scanner, and shutdown hooks<br>
+│   ├── RoundedPanel.java   # Core graphics helper overriding UI painting geometry<br>
+│   ├── TitlePanel.java     # Responsive header displaying the dynamic net balance banner<br>
+│   ├── Transaction.java    # Read-only model representing single ledger entries<br>
+│   └── TransactionList.java# Centralized storage array and calculation matrix engine<br>
+│<br>
+├── MacondoFinanceTracker.iml # IntelliJ module structure descriptor<br>
+└── transactions.json       # Generated local JSON data ledger database file<br>
 
 ---
 
