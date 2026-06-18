@@ -12,14 +12,14 @@ MacondoFinanceTracker/<br>
 │<br>
 ├── .idea/                  # IntelliJ project configuration metadata<br>
 ├── src/                    # Source folder containing Java classes<br>
-│   ├── DataPanel.java      # Table views, analytics calculations, and custom pie chart canvas<br>
-│   ├── FinancePanel.java   # Master layout wrapper organizing the global frame grids<br>
-│   ├── InputPanel.java     # Text consoles, filter hooks, and action listeners<br>
-│   ├── Main.java           # Main bootstrapper, storage scanner, and shutdown hooks<br>
-│   ├── RoundedPanel.java   # Core graphics helper overriding UI painting geometry<br>
-│   ├── TitlePanel.java     # Responsive header displaying the dynamic net balance banner<br>
-│   ├── Transaction.java    # Read-only model representing single ledger entries<br>
-│   └── TransactionList.java# Centralized storage array and calculation matrix engine<br>
+│&emsp;├── DataPanel.java      # Table views, analytics calculations, and custom pie chart canvas<br>
+│&emsp;├── FinancePanel.java   # Master layout wrapper organizing the global frame grids<br>
+│&emsp;├── InputPanel.java     # Text consoles, filter hooks, and action listeners<br>
+│&emsp;├── Main.java           # Main bootstrapper, storage scanner, and shutdown hooks<br>
+│&emsp;├── RoundedPanel.java   # Core graphics helper overriding UI painting geometry<br>
+│&emsp;├── TitlePanel.java     # Responsive header displaying the dynamic net balance banner<br>
+│&emsp;├── Transaction.java    # Read-only model representing single ledger entries<br>
+│&emsp;└── TransactionList.java# Centralized storage array and calculation matrix engine<br>
 │<br>
 ├── MacondoFinanceTracker.iml # IntelliJ module structure descriptor<br>
 └── transactions.json       # Generated local JSON data ledger database file<br>
@@ -52,7 +52,7 @@ Historical state records are saved to a a JSON file name transactions.json locat
 &emsp;},<br>
 &emsp;{<br>
 &emsp;&emsp;"name": "Electric Bill",<br>
-&emsp;"amount": -85.5,<br>
+&emsp;&emsp;"amount": -85.5,<br>
 &emsp;&emsp;"date": "Jun 03, 2026",<br>
 &emsp;&emsp;"category": "Housing & Bills"<br>
 &emsp;}<br>
