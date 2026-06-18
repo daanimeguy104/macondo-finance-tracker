@@ -10,8 +10,19 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Comparator;
 
+/**
+ * Displays summary information and visual analytics for all transactions.
+ * Shows total income, total expenses, transaction count, transaction history,
+ * quick financial ratios, and an expenses-by-category pie chart.
+ *
+ * @author    Vishruth (daanimeguy104)
+ * @since     June 10th, 2026
+ */
 public class DataPanel extends RoundedPanel {
     
+    /**
+     *  Labels used to determine the categories displayed in the pie chart
+     */
     private final String[] expenseCategories = {
         "Entertainment",
         "Dining & Groceries",
@@ -21,6 +32,9 @@ public class DataPanel extends RoundedPanel {
         "Other / Misc"
     };
     
+    /**
+     * Colors used for each category slice in the pie chart
+     */
     private final Color[] sliceColors = {
         new Color(79, 70, 229),
         new Color(13, 148, 136),
@@ -30,29 +44,87 @@ public class DataPanel extends RoundedPanel {
         new Color(75, 85, 99)
     };
     
+    /**
+     * Shared transaction list used to populate all displays.
+     */
     private TransactionList tl;
+    
+    /**
+     * Shared DecimalFormat used for consistent currency formatting.
+     */
     private DecimalFormat df;
+    
+    /**
+     * Row sorter used to support filtering and sorting in the transactions table.
+     */
     private TableRowSorter<DefaultTableModel> sorter;
+    
+    /**
+     * Stores total expense amounts per category for the pie chart.
+     */
     private double[] expenseAmounts;
     
+    /**
+     * Label showing total expenses.
+     */
     private JLabel expenseTotal;
+    
+    /**
+     *  Label showing total income.
+     */
     private JLabel incomeTotal;
+    
+    /**
+     *  Label showing the number of transactions.
+     */
     private JLabel transactionAmt;
+    
+    /**
+     * Table containing transaction history.
+     */
     private JTable transactionsTable;
+    
+    /**
+     * Model behind the transaction history table.
+     */
     private DefaultTableModel transactionsTableModel;
+    
+    /**
+     * Label showing savings rate.
+     */
     private JLabel savingsRate;
+    
+    /**
+     * Label showing expense-to-income ratio.
+     */
     private JLabel expenseToIncome;
+    
+    /**
+     * Label showing net margin.
+     */
     private JLabel netMargin;
     
+    /**
+     * Constructs the main analytics panel for the finance tracker.
+     *
+     * Builds the summary cards, transaction history table, quick insight section,
+     * and pie chart visualization. All values are initialized from the provided
+     * TransactionList and kept in a consistent formatted layout.
+     *
+     * @param tl        The TransactionList containing all transactions
+     * @param df        The DecimalFormat used for currency display
+     */
     public DataPanel(TransactionList tl, DecimalFormat df) {
         super(25, new Color(248, 250, 252));
         this.tl = tl;
         this.df = df;
         
+        // main container styling
         setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
         setPreferredSize(new Dimension(520, 510));
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
+        // summary row containing income, expenses, and transaction count cards
         JPanel summaryRow = new JPanel(new GridLayout(1, 3));
         summaryRow.setLayout(new GridLayout(1, 0, 15, 0));
         summaryRow.setOpaque(false);
@@ -60,6 +132,7 @@ public class DataPanel extends RoundedPanel {
         summaryRow.setMaximumSize(new Dimension(520, 80));
         summaryRow.setMinimumSize(new Dimension(520, 80));
         
+        // income card
         JPanel incomeCard = new RoundedPanel(15, new Color(40, 167, 69));
         incomeCard.setLayout(new BoxLayout(incomeCard, BoxLayout.Y_AXIS));
         incomeCard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -80,6 +153,7 @@ public class DataPanel extends RoundedPanel {
         incomeCard.add(Box.createVerticalStrut(10));
         incomeCard.add(incomeTotal);
         
+        // expense card
         JPanel expenseCard = new RoundedPanel(15, new Color(220, 53, 69));
         expenseCard.setLayout(new BoxLayout(expenseCard, BoxLayout.Y_AXIS));
         expenseCard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -100,6 +174,7 @@ public class DataPanel extends RoundedPanel {
         expenseCard.add(Box.createVerticalStrut(10));
         expenseCard.add(expenseTotal);
         
+        // transaction count card
         JPanel transactionCard = new RoundedPanel(15, new Color(108, 117, 125));
         transactionCard.setLayout(new BoxLayout(transactionCard, BoxLayout.Y_AXIS));
         transactionCard.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
@@ -124,6 +199,7 @@ public class DataPanel extends RoundedPanel {
         summaryRow.add(expenseCard);
         summaryRow.add(transactionCard);
         
+        // container for the transaction table section
         JPanel tableContainer = new JPanel(new BorderLayout(0, 10));
         tableContainer.setOpaque(false);
         tableContainer.setPreferredSize(new Dimension(490, 200));
@@ -137,6 +213,7 @@ public class DataPanel extends RoundedPanel {
         
         String[] columnNames = {"Type", "Date", "Description", "Category", "Amount"};
         
+        // table model is non-editable so users cannot alter entries directly
         transactionsTableModel = new DefaultTableModel(columnNames, 0) {
             public Class<?> getColumnClass(int columnIndex) {
                 if(columnIndex == 1) {
@@ -150,10 +227,12 @@ public class DataPanel extends RoundedPanel {
             }
         };
         
+        // populate table from the current transaction list
         for(int i = 0; i < tl.getTransactionCount(); i++) {
             String[] row = new String[transactionsTableModel.getColumnCount()];
             Transaction currTrans = tl.getTransaction(i);
             
+            // use an arrow to indicate whether the transaction is income or expense
             if(currTrans.getAmount() > 0) {
                 row[0] = "▲";
             } else {
@@ -189,14 +268,16 @@ public class DataPanel extends RoundedPanel {
         transactionsTable.getColumnModel().getColumn(3).setPreferredWidth(120);
         transactionsTable.getColumnModel().getColumn(4).setPreferredWidth(95);
         
+        // custom rendering for the type column so income and expenses are color coded
         transactionsTable.getColumnModel().getColumn(0).setCellRenderer(new DefaultTableCellRenderer() {
             
             public Component getTableCellRendererComponent(JTable table, Object value,
-                boolean isSelected, boolean hasFocus, int row, int column) {
+                                                           boolean isSelected, boolean hasFocus, int row, int column) {
                 
                 Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 setHorizontalAlignment(SwingConstants.CENTER);
                 
+                // reset icon each time to avoid stale rendering
                 setIcon(null);
                 
                 if(value != null && !isSelected) {
@@ -217,6 +298,7 @@ public class DataPanel extends RoundedPanel {
             }
         });
         
+        // sorter enables filtering and numeric comparison for amount column
         sorter = new TableRowSorter<DefaultTableModel>(transactionsTableModel);
         sorter.setSortable(0, false);
         sorter.setComparator(4, new Comparator<String>() {
@@ -234,6 +316,7 @@ public class DataPanel extends RoundedPanel {
         });
         transactionsTable.setRowSorter(sorter);
         
+        // make the table scrollable
         JScrollPane scroller = new JScrollPane(transactionsTable);
         scroller.setBorder(BorderFactory.createEmptyBorder());
         scroller.getViewport().setBackground(getBackground());
@@ -241,6 +324,7 @@ public class DataPanel extends RoundedPanel {
         tableContainer.add(tableTitle, BorderLayout.NORTH);
         tableContainer.add(scroller, BorderLayout.CENTER);
         
+        // lower section splits insights and pie chart side-by-side
         JPanel bottomSplitInsights = new JPanel();
         bottomSplitInsights.setLayout(new BoxLayout(bottomSplitInsights, BoxLayout.X_AXIS));
         bottomSplitInsights.setPreferredSize(new Dimension(490, 150));
@@ -248,6 +332,7 @@ public class DataPanel extends RoundedPanel {
         bottomSplitInsights.setMinimumSize(new Dimension(490, 150));
         bottomSplitInsights.setOpaque(false);
         
+        // quick insights panel
         JPanel ratiosPanel = new JPanel();
         ratiosPanel.setLayout(new BoxLayout(ratiosPanel, BoxLayout.Y_AXIS));
         ratiosPanel.setPreferredSize(new Dimension(190, 150));
@@ -282,6 +367,7 @@ public class DataPanel extends RoundedPanel {
         ratiosPanel.add(netMargin);
         ratiosPanel.add(Box.createVerticalGlue());
         
+        // pie chart and legend section
         JPanel chartWrapper = new JPanel();
         chartWrapper.setLayout(new BoxLayout(chartWrapper, BoxLayout.Y_AXIS));
         chartWrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -308,6 +394,7 @@ public class DataPanel extends RoundedPanel {
         legendPanel.setOpaque(false);
         legendPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
+        // create one legend row per expense category
         for(int i = 0; i < expenseCategories.length; i++) {
             JPanel itemRow = new JPanel();
             itemRow.setLayout(new BoxLayout(itemRow, BoxLayout.X_AXIS));
@@ -364,17 +451,32 @@ public class DataPanel extends RoundedPanel {
         add(bottomSplitInsights);
         add(Box.createVerticalGlue());
         
+        // compute totals/ratios and populate labels
         updateDisplays();
     }
     
+    /**
+     * Returns the table model used for the transaction history table.
+     *
+     * @return      The table model for transaction rows
+     */
     public DefaultTableModel getTransactionsTableModel() {
         return transactionsTableModel;
     }
     
+    /**
+     * Returns the transaction history table component.
+     *
+     * @return      The JTable showing transaction history
+     */
     public JTable getTable() {
         return transactionsTable;
     }
     
+    /**
+     * Updates all displayed summary values based on the current TransactionList.
+     * Refreshes income, expenses, transaction count, and quick insight ratios.
+     */
     public void updateDisplays() {
         incomeTotal.setText("$" + df.format(tl.getIncome()));
         expenseTotal.setText("$" + df.format(tl.getExpenses()));
@@ -396,7 +498,12 @@ public class DataPanel extends RoundedPanel {
         netMargin.setText(String.format("Net Margin: %.1f%%", netMarginRate * 100));
     }
     
-    
+    /**
+     * Filters the transaction table using a case-insensitive regex match on the
+     * Description column.
+     *
+     * @param query     The search string to apply as a filter
+     */
     public void filterTable(String query) {
         if(query.trim().length() == 0) {
             sorter.setRowFilter(null);
@@ -405,8 +512,14 @@ public class DataPanel extends RoundedPanel {
         }
     }
     
+    /**
+     * Pie chart panel that draws expense categories as colored slices.
+     */
     class ExpensesPieChart extends JPanel {
         
+        /**
+         * Constructs the pie chart panel and computes expense totals by category.
+         */
         public ExpensesPieChart() {
             setBackground(DataPanel.this.getBackground());
             
@@ -417,15 +530,23 @@ public class DataPanel extends RoundedPanel {
                     
                     String category = currTrans.getCategory();
                     int index = Arrays.asList(expenseCategories).indexOf(category);
+                    
+                    // add the absolute expense amount to the matching category bucket
                     expenseAmounts[index] -= currTrans.getAmount();
                 }
             }
         }
         
+        /**
+         * Paints the pie chart and donut hole.
+         *
+         * @param g     The Graphics context used for painting
+         */
         public void paintComponent(Graphics g) {
             Graphics2D g2d = (Graphics2D)(g.create());
             int padding = 15;
             
+            // calculate the largest square area that fits inside the panel
             double pieChartSize = Math.max(20, Math.min(getWidth(), getHeight())
                 - padding);
             
@@ -434,13 +555,23 @@ public class DataPanel extends RoundedPanel {
             
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             
+            // if there are no expenses, draw a neutral empty chart
             if(tl.getExpenses() == 0) {
                 g2d.setColor(new Color(226, 232, 240));
                 g2d.fill(new Ellipse2D.Double(x, y, pieChartSize, pieChartSize));
+                
+                double donutSize = pieChartSize * 0.35;
+                double donutX = (getWidth() - donutSize) / 2.0;
+                double donutY = (getHeight() - donutSize) / 2.0;
+                
+                g2d.setColor(getBackground());
+                g2d.fill(new Ellipse2D.Double(donutX, donutY, donutSize, donutSize));
+                
                 g2d.dispose();
                 return;
             }
             
+            // draw one slice per category based on expense totals
             double startAngle = 0;
             for(int i = 0; i < expenseAmounts.length; i++) {
                 double currAmt = expenseAmounts[i];
@@ -458,13 +589,6 @@ public class DataPanel extends RoundedPanel {
                 
                 startAngle += arcAngle;
             }
-            
-            double donutSize = pieChartSize * 0.35;
-            double donutX = (getWidth() - donutSize) / 2.0;
-            double donutY = (getHeight() - donutSize) / 2.0;
-            
-            g2d.setColor(getBackground());
-            g2d.fill(new Ellipse2D.Double(donutX, donutY, donutSize, donutSize));
             
             g2d.dispose();
         }
