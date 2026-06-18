@@ -28,12 +28,13 @@ public class TitlePanel extends RoundedPanel {
     private JLabel runningAmount;
     
     public TitlePanel(TransactionList tl, DecimalFormat df) {
+        super(25, new Color(248, 250, 252));
+        
         // initialize the TransactionList and DecimalFormat for use in updating the balance
         this.tl = tl;
         this.df = df;
         
-        // call parent constructor and set up layout, border, and size
-        super(25, new Color(248, 250, 252));
+        // set up layout, border, and size
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setPreferredSize(new Dimension(780, 50));
