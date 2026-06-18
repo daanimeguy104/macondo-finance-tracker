@@ -43,20 +43,20 @@ The category overview chart does not rely on heavy external graphics frameworks.
 
 Historical state records are saved to a a JSON file name transactions.json located within the execution directory root. Expense entries are calculated dynamically using negative numbers:
 
-[
-    {
-        "name": "Bi-Weekly Paycheck",
-        "amount": 2500.0,
-        "date": "Jun 12, 2026",
-        "category": "Income"
-    },
-    {
-        "name": "Electric Bill",
-        "amount": -85.5,
-        "date": "Jun 03, 2026",
-        "category": "Housing & Bills"
-    }
-]
+[<br>
+&emsp;{<br>
+&emsp;&emsp;"name": "Bi-Weekly Paycheck",<br>
+&emsp;&emsp;"amount": 2500.0,<br>
+&emsp;&emsp;"date": "Jun 12, 2026",<br>
+&emsp;&emsp;"category": "Income"<br>
+&emsp;},<br>
+&emsp;{<br>
+&emsp;&emsp;"name": "Electric Bill",<br>
+&emsp;"amount": -85.5,<br>
+&emsp;&emsp;"date": "Jun 03, 2026",<br>
+&emsp;&emsp;"category": "Housing & Bills"<br>
+&emsp;}<br>
+]<br>
 
 ---
 
