@@ -1,49 +1,50 @@
 # Macondo Finance Tracker
 
-Macondo Finance Tracker is a lightweight desktop personal finance dashboard built using **Java Swing**. It provides users with live financial tracking, automated budget metrics, dynamic category visualizations, and continuous data persistence using a localized JSON flat-file storage engine.
+This application is local personal finance tool that was built using Java. It helps users track their financial status by breaking down logged expenses and income. For long time storage, the program saves to a custom JSON file.
 
 ---
 
-## Project Architecture & Directory Layout
+## Directory Layout and Project Breakdown
 
-This project is configured as a standard IntelliJ IDEA module. All operational codebase elements reside inside the root source directory:
-
-MacondoFinanceTracker/  
-│  
-├── .idea/ &emsp;&emsp; # IntelliJ project configuration metadata  
-├── src/ &emsp;&emsp; # Source folder containing Java classes  
-│&emsp;├── DataPanel.java &emsp;&emsp; # Table views, analytics calculations, and custom pie chart canvas  
-│&emsp;├── FinancePanel.java &emsp;&emsp; # Master layout wrapper organizing the global frame grids  
-│&emsp;├── InputPanel.java &emsp;&emsp; msp# Text consoles, filter hooks, and action listeners  
-│&emsp;├── Main.java &emsp;&emsp; # Main bootstrapper, storage scanner, and shutdown hooks  
-│&emsp;├── RoundedPanel.java &emsp;&emsp; # Core graphics helper overriding UI painting geometry  
-│&emsp;├── TitlePanel.java &emsp;&emsp; # Responsive header displaying the dynamic net balance banner  
-│&emsp;├── Transaction.java &emsp;&emsp; # Read-only model representing single ledger entries  
-│&emsp;└── TransactionList.java  &emsp;&emsp; # Centralized storage array and calculation matrix engine  
-│  
-├── MacondoFinanceTracker.iml &emsp; # IntelliJ module structure descriptor  
-└── transactions.json &emsp; # Generated local JSON data ledger database file  
+This project was created using IntelliJ Ultimate, and as such follows its file format:
+- the .idea folder contains IntelliJ config data (can be ignored if not using IntelliJ)
+- transaction.json is the custom JSON file the program reads from and writes to pull user data. 
+- src is the main folder where the source code is found
+  - Main.java is the entry point for the program. Controls writing to and reading from the custom JSON file.
+  - FinancePanel.java is the wrapper panel for all the GUI. It creates TitlePanel, InputPanel, and DataPanel, and initializes two shared objects between its components: a       TransactionList and DecimalFormatter
+  - TitlePanel.java contains the title of the project and JLabel with current user balance. Updated when a transaction is added or removed.
+  - InputPanel.java contains text fields, buttons, menus, and a checkbox so the user can log a transaction. There is also a button to remove a transaction. Both buttons         update data in DataPanel accordingly. Furthermore, there is a search bar so the user can filter through table elements.
+  - DataPanel.java contains the data of all the users transactions. At the top, there are rounded panels that display total income, expenses, and transaction amount. Below      it is a table containing all the transactions the user has made with the info on each. Clicking on the table header sections will sort the table by that category,           ascending and descendingly. Below that to the left, there are some financial ratios regarding the transactions. To the left of that, there is pie chart breaking down        the user's expenses by category, with a legend to the right of the pie chart.
+  - RoundedPanel.java is a custom JPanel with rounded edges. It is the parent of TitlePanel, InputPanel, and DataPanel, and is used inside DataPanel.java as well.
+  - Transaction.java is an object representing a single transaction. It's properties include it's description, amount, category, and date it was made. Has accessors for all     those fields.
+  - TransactionList.java is an object representing a list of transactions. It has methods that calculate and return information regarding the list (ex. the current balance)
 
 ---
 
 ## Core Technical Mechanics
 
-### 1. The Automated Storage Hook
-To guarantee data integrity without bottlenecking performance through continuous disk reads/writes during runtime, data serialization is isolated using a JVM standard shutdown hook. This ensures files are written perfectly back to the disk when the application window closes.
+### 1. Shutdown Hook
+As soon as the program has been exited for whatever reason, a shutdown hook is run that forces the program to the save the contents of the TransactionList object to a JSON file named "transactions.json"
 
-### 2. Multi-Tier Input Safety Checks
-Every transaction undergoes input validation before being added to memory caches. This prevents exceptions from broken numeric text blocks or empty string fields.
+### 2. Input Safety Checks
+When the user adds a transactions, the input fields for the transaction are double checked to make sure no invalid inputs are present.
 
-### 3. Native Graphics Pie Chart Calculations
-The category overview chart does not rely on heavy external graphics frameworks. It utilizes low-level Graphics2D draw loops mapped against the tracking model vectors to render smooth donut slices.
+### 3. Pie Chart Calculations
+The pie chart that breaks down user expenses is not created using external libraries, but with Java's Graphics2D to keep the program efficient and lightweight.
 
 ---
 
-## File Storage Scheme
+## File Storage
 
-Historical state records are saved to a a JSON file name transactions.json located within the execution directory root. Expense entries are calculated dynamically using negative numbers:
+On shutdown, the application will save the contents of the TransactionList object in use to the custom JSON file like so (expenses are denoted as negative numbers):
 
 [<br>
+&emsp;{<br>
+&emsp;&emsp;"name": "transaction name",<br>
+&emsp;&emsp;"amount": transaction amount (negative if expense and vice versa),<br>
+&emsp;&emsp;"date": "transaction date (will take the date when transaction is made in real time)",<br>
+&emsp;&emsp;"category": "transaction category"<br>
+&emsp;},<br>
 &emsp;{<br>
 &emsp;&emsp;"name": "Bi-Weekly Paycheck",<br>
 &emsp;&emsp;"amount": 2500.0,<br>
@@ -57,31 +58,3 @@ Historical state records are saved to a a JSON file name transactions.json locat
 &emsp;&emsp;"category": "Housing & Bills"<br>
 &emsp;}<br>
 ]<br>
-
----
-
-## Getting Started
-
-### Prerequisites
-* Java Development Kit (JDK 8 or higher)
-* IntelliJ IDEA (Community or Ultimate Edition)
-
-### Importing into IntelliJ IDEA
-1. Open IntelliJ IDEA.
-2. Select File -> Open... from the top menu toolbar.
-3. Browse to and select the root MacondoFinanceTracker project folder.
-4. IntelliJ will automatically detect the .iml file and configure your workspace modules instantly.
-
-### Running the App from Command Line
-
-To compile and run the application manually from your terminal, execute these commands from the **root directory** (the folder containing transactions.json):
-
-javac src/*.java
-java -cp src Main
-
-### How the Command Line Paths Work:
-* javac src/*.java compiles all of the Java source code files tucked inside the src folder and outputs their respective executable .class files right alongside them.
-* java -cp src Main launches the program. The -cp src flag tells the Java Virtual Machine to look inside the src directory to find your compiled code classes. 
-* Because you run this command directly from the root folder, Java treats the root folder as the active "Working Directory". This allows Main.java to cleanly discover and update your transactions.json file exactly where it sits in the project root, keeping your data completely separate from your source code.
-
-*Note: On boot, the program will look for transactions.json. If it does not exist, an option prompt will alert you, and a fresh file will automatically initialize on the first safe exit sequence.*
