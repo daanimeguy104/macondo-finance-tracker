@@ -559,14 +559,6 @@ public class DataPanel extends RoundedPanel {
             if(tl.getExpenses() == 0) {
                 g2d.setColor(new Color(226, 232, 240));
                 g2d.fill(new Ellipse2D.Double(x, y, pieChartSize, pieChartSize));
-                
-                double donutSize = pieChartSize * 0.35;
-                double donutX = (getWidth() - donutSize) / 2.0;
-                double donutY = (getHeight() - donutSize) / 2.0;
-                
-                g2d.setColor(getBackground());
-                g2d.fill(new Ellipse2D.Double(donutX, donutY, donutSize, donutSize));
-                
                 g2d.dispose();
                 return;
             }
@@ -589,6 +581,13 @@ public class DataPanel extends RoundedPanel {
                 
                 startAngle += arcAngle;
             }
+            
+            double donutSize = pieChartSize * 0.35;
+            double donutX = (getWidth() - donutSize) / 2.0;
+            double donutY = (getHeight() - donutSize) / 2.0;
+            
+            g2d.setColor(getBackground());
+            g2d.fill(new Ellipse2D.Double(donutX, donutY, donutSize, donutSize));
             
             g2d.dispose();
         }
