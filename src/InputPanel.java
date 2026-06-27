@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 /**
  * Handles user input for searching, adding, and deleting transactions.
@@ -432,6 +433,7 @@ public class InputPanel extends RoundedPanel {
         public void actionPerformed(ActionEvent evt) {
             // category selection only applies when the item is marked as an expense
             categoriesCB.setEnabled(isExpenseCB.isSelected());
+            categoriesCB.setSelectedIndex(-1);
             
             // repaint so the UI reflects the change immediately
             revalidate();
@@ -465,14 +467,17 @@ public class InputPanel extends RoundedPanel {
                 return;
             }
             
+            int[] modelRows = new int[selectedRows.length];
+            for(int i = 0; i < selectedRows.length; i++) {
+                modelRows[i] = dp.getTable().convertRowIndexToModel(selectedRows[i]);
+            }
+            Arrays.sort(modelRows);
+            
             // remove selected rows from bottom to top so row indices do not shift
             for(int i = selectedRows.length - 1; i >= 0; i--) {
-                // convert the visible row index to the underlying model index
-                int modelRow = transactions.convertRowIndexToModel(selectedRows[i]);
-                
                 // remove from the transaction list and table model
-                tl.removeTransaction(modelRow);
-                transactionsModel.removeRow(modelRow);
+                tl.removeTransaction(modelRows[i]);
+                transactionsModel.removeRow(modelRows[i]);
             }
             
             // update the other panels after deletion

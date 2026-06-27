@@ -6,12 +6,6 @@
         "category": "Income"
     },
     {
-        "name": "Monthly Apartment Rent",
-        "amount": -1200.0,
-        "date": "Jun 01, 2026",
-        "category": "Housing & Bills"
-    },
-    {
         "name": "Electric Bill",
         "amount": -85.5,
         "date": "Jun 03, 2026",
@@ -64,5 +58,11 @@
         "amount": -3.5,
         "date": "Jun 16, 2026",
         "category": "Other / Misc"
+    },
+    {
+        "name": "Rent",
+        "amount": -1000.0,
+        "date": "Jun 27, 2026",
+        "category": "Housing & Bills"
     }
 ]

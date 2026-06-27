@@ -105,6 +105,11 @@ public class DataPanel extends RoundedPanel {
     private JLabel netMargin;
     
     /**
+     * Labels tracking the text instances inside the visible pie chart legend.
+     */
+    private JLabel[] legendLabels;
+    
+    /**
      * Constructs the main analytics panel for the finance tracker.
      *
      * Builds the summary cards, transaction history table, quick insight section,
@@ -394,6 +399,8 @@ public class DataPanel extends RoundedPanel {
         legendPanel.setOpaque(false);
         legendPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
+        legendLabels = new JLabel[expenseCategories.length];
+        
         // create one legend row per expense category
         for(int i = 0; i < expenseCategories.length; i++) {
             JPanel itemRow = new JPanel();
@@ -420,14 +427,14 @@ public class DataPanel extends RoundedPanel {
                 percentage = expenseAmounts[i] / tl.getExpenses() * 100;
             }
             
-            JLabel nameLabel = new JLabel(String.format("%s (%.1f%%)",
+            legendLabels[i] = new JLabel(String.format("%s (%.1f%%)",
                 expenseCategories[i], percentage), JLabel.LEFT);
-            nameLabel.setForeground(new Color(30, 41, 59));
-            nameLabel.setAlignmentY(Component.CENTER_ALIGNMENT);
+            legendLabels[i].setForeground(new Color(30, 41, 59));
+            legendLabels[i].setAlignmentY(Component.CENTER_ALIGNMENT);
             
             itemRow.add(colorDot);
             itemRow.add(Box.createHorizontalStrut(5));
-            itemRow.add(nameLabel);
+            itemRow.add(legendLabels[i]);
             
             legendPanel.add(itemRow);
         }
@@ -496,6 +503,20 @@ public class DataPanel extends RoundedPanel {
         expenseToIncome.setText(String.format("Expense to Income: %.1f%%",
             expenseToIncomeRate * 100));
         netMargin.setText(String.format("Net Margin: %.1f%%", netMarginRate * 100));
+        
+        calculateExpenseCategories();
+        for(int i = 0; i < expenseCategories.length; i++) {
+            double percentage = 0;
+            if(tl.getExpenses() != 0) {
+                percentage = (expenseAmounts[i] / tl.getExpenses()) * 100;
+            }
+            if (legendLabels[i] != null) {
+                legendLabels[i].setText(String.format("%s (%.1f%%)", expenseCategories[i], percentage));
+            }
+        }
+        
+        revalidate();
+        repaint();
     }
     
     /**
@@ -513,6 +534,24 @@ public class DataPanel extends RoundedPanel {
     }
     
     /**
+     * Calculates how much money is going toward each expense category.
+     */
+    public void calculateExpenseCategories() {
+        expenseAmounts = new double[expenseCategories.length];
+        for(int i = 0; i < tl.getTransactionCount(); i++) {
+            Transaction currTrans = tl.getTransaction(i); // get current transaction
+            if(currTrans.isExpense()) {
+                
+                String category = currTrans.getCategory();
+                int index = Arrays.asList(expenseCategories).indexOf(category);
+                
+                // add the absolute expense amount to the matching category bucket
+                expenseAmounts[index] -= currTrans.getAmount();
+            }
+        }
+    }
+    
+    /**
      * Pie chart panel that draws expense categories as colored slices.
      */
     class ExpensesPieChart extends JPanel {
@@ -522,19 +561,7 @@ public class DataPanel extends RoundedPanel {
          */
         public ExpensesPieChart() {
             setBackground(DataPanel.this.getBackground());
-            
-            expenseAmounts = new double[expenseCategories.length];
-            for(int i = 0; i < tl.getTransactionCount(); i++) {
-                Transaction currTrans = tl.getTransaction(i);
-                if(currTrans.isExpense()) {
-                    
-                    String category = currTrans.getCategory();
-                    int index = Arrays.asList(expenseCategories).indexOf(category);
-                    
-                    // add the absolute expense amount to the matching category bucket
-                    expenseAmounts[index] -= currTrans.getAmount();
-                }
-            }
+            calculateExpenseCategories();
         }
         
         /**
